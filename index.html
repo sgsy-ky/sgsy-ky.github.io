@@ -118,8 +118,8 @@
 
         <div class="input-group">
             <label for="alkalinePhosphatase">alkaline phosphatase（U/L）</label>
-            <input type="number" id="alkalinePhosphatase" step="0.1" min="0" max="2000" required>
-            <div class="error" id="alkalinePhosphataseError">Please enter a valid value (0-2000).</div>
+            <input type="number" id="alkalinePhosphatase" step="0.1" min="12" max="2000" required>
+            <div class="error" id="alkalinePhosphataseError">Please enter a valid value (12-2000).</div>
         </div>
 
 
@@ -177,7 +177,7 @@
         }
 
         // BMI验证
-        if (alkalinePhosphatase.value < 0 || alkalinePhosphatase.value > 2000 || !albumin.value) {
+        if (alkalinePhosphatase.value < 12 || alkalinePhosphatase.value > 2000 || !albumin.value) {
             document.getElementById('alkalinePhosphataseError').style.display = 'block';
             isValid = false;
         } else {
