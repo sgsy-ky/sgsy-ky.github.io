@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评估结果</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .result-card {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+           border-radius: 8px;
+            margin: 20px 0;
+        }
+        .result-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+           /* border-radius: 50%;*/
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .result-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .result-description {
+            font-size: 18px;
+            color: #666;
+            margin: 20px 0;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .back-btn:hover {
+            background: #1a252f;
+        }
+        /* 不同风险等级的样式 */
+        .low-risk { color: var(--secondary); }
+        .medium-risk { color: var(--warning); }
+        .high-risk { color: var(--danger); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>评估结果</h1>
+
+    <div class="result-card">
+        <div id="resultImage"></div>
+        <div class="result-value" id="pValue"></div>
+        <div class="result-description" id="riskLevel"></div>
+        <div id="resultImageTest"></div>
+        <div class="result-description" id="riskLevelTest"></div>
+        <a href="index.html" class="back-btn">重新评估</a>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script>
+    // 获取URL参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const p = parseFloat(urlParams.get('p'));
+
+    // 结果配置 训练
+    const resultConfig = [
+        {
+            range: [0, 0.1],
+            image: 'img/xl/1.jpg', // 替换为实际图片路径
+            text: '低风险（Visualization of training set）',
+            colorClass: 'low-risk'
+        },
+        {
+            range: [0.1, 0.2],
+            image: 'img/xl/2.jpg', // 替换为实际图片路径
+            text: '低风险（Visualization of training set）',
+            colorClass: 'low-risk'
+        },
+        {
+            range: [0.2, 0.3],
+            image: 'img/xl/3.jpg', // 替换为实际图片路径
+            text: '低风险（Visualization of training set）',
+            colorClass: 'low-risk'
+        },
+        {
+            range: [0.3, 0.4],
+            image: 'img/xl/4.jpg', // 替换为实际图片路径
+            text: '中风险（Visualization of training set）',
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.4, 0.5],
+            image: 'img/xl/5.jpg', // 替换为实际图片路径
+            text: '中风险（Visualization of training set）',
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.5, 0.6],
+            image: 'img/xl/6.jpg', // 替换为实际图片路径
+            text: '中风险（Visualization of training set）',
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.6, 0.7],
+            image: 'img/xl/7.jpg', // 替换为实际图片路径
+            text: '中风险（Visualization of training set）',
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.7, 0.8],
+            image: 'img/xl/8.jpg', // 替换为实际图片路径
+            text: '高风险（Visualization of training set）',
+            colorClass: 'high-risk'
+        },
+        {
+            range: [0.8, 0.9],
+            image: 'img/xl/9.jpg', // 替换为实际图片路径
+            text: '高风险（Visualization of training set）',
+            colorClass: 'high-risk'
+        },
+        {
+            range: [0.9, 10000],
+            image: 'img/xl/10.jpg', // 替换为实际图片路径
+            text: '高风险（Visualization of training set）',
+            colorClass: 'high-risk'
+        }
+    ];
+
+
+    const resultConfigTest = [
+        {
+            range: [0, 0.1],
+            text: '低风险（Visualization of Test Set）',
+            image: 'img/cs/1.jpg', // 替换为实际图片路径
+            colorClass: 'low-risk'
+        },
+        {
+            range: [0.1, 0.2],
+            text: '低风险（Visualization of Test Set）',
+            image: 'img/cs/2.jpg', // 替换为实际图片路径
+            colorClass: 'low-risk'
+
+        },
+        {
+            range: [0.2, 0.3],
+            text: '低风险（Visualization of Test Set）',
+            image: 'img/cs/3.jpg', // 替换为实际图片路径
+            colorClass: 'low-risk'
+
+        },
+        {
+            range: [0.3, 0.4],
+            text: '中风险（Visualization of Test Set）',
+            image: 'img/cs/4.jpg', // 替换为实际图片路径
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.4, 0.5],
+            text: '中风险（Visualization of Test Set）',
+            image: 'img/cs/5.jpg', // 替换为实际图片路径
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.5, 0.6],
+            text: '中风险（Visualization of Test Set）',
+            image: 'img/xl/6.jpg', // 替换为实际图片路径
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.6, 0.7],
+            text: '中风险（Visualization of Test Set）',
+            image: 'img/xl/7.jpg', // 替换为实际图片路径
+            colorClass: 'medium-risk'
+        },
+        {
+            range: [0.7, 0.8],
+            image: 'img/xl/8.jpg', // 替换为实际图片路径
+            text: '高风险（Visualization of Test Set）',
+            colorClass: 'high-risk'
+        },
+        {
+            range: [0.8, 0.9],
+            image: 'img/xl/9.jpg', // 替换为实际图片路径
+            text: '高风险（Visualization of Test Set）',
+            colorClass: 'high-risk'
+        },
+        {
+            range: [0.9, 10000],
+            image: 'img/xl/10.jpg', // 替换为实际图片路径
+            text: '高风险（Visualization of Test Set）',
+            colorClass: 'high-risk'
+        }
+    ];
+
+
+    function displayResult() {
+        if (isNaN(p)){
+            document.getElementById('pValue').textContent = '无效结果';
+            return;
+        }
+
+        // 显示数值
+        const pValueElement = document.getElementById('pValue');
+        pValueElement.textContent = p.toFixed(4)*100+'%';
+
+        // 确定风险等级
+        const result = resultConfig.find(r =>
+            p >= r.range[0] && p < r.range[1]
+        );
+        // 确定风险等级
+        const resultTest = resultConfigTest.find(r =>
+            p >= r.range[0] && p < r.range[1]
+        );
+
+        // 显示图片和描述
+        const imgElement = document.createElement('img');
+        const imgElementTest = document.createElement('img');
+        imgElement.src = result.image;
+        imgElementTest.src = resultTest.image;
+        imgElement.className = 'result-image';
+        imgElementTest.className = 'result-image';
+        document.getElementById('resultImage').appendChild(imgElement);
+        document.getElementById('resultImageTest').appendChild(imgElementTest);
+
+        // 设置样式
+        pValueElement.className = `result-value ${result.colorClass}`;
+        document.getElementById('riskLevel').textContent =
+            `${result.text} (${result.range[0]}-${result.range[1]})`;
+        document.getElementById('riskLevelTest').textContent =
+            `${resultTest.text} (${resultTest.range[0]}-${resultTest.range[1]})`;
+    }
+
+    // 初始化显示结果
+    displayResult();
+</script>
+</body>
+</html>
