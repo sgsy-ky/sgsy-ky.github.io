@@ -239,7 +239,7 @@
 
         // 显示数值
         const pValueElement = document.getElementById('pValue');
-        pValueElement.textContent = p.toFixed(4)*100+'%';
+        pValueElement.textContent = (p*100).toFixed(2)+'%';
 
         // 确定风险等级
         const result = resultConfig.find(r =>
@@ -263,9 +263,9 @@
         // 设置样式
         pValueElement.className = `result-value ${result.colorClass}`;
         document.getElementById('riskLevel').textContent =
-            `${result.text} (${result.range[0]}-${result.range[1]})`;
+            `${result.text} `;
         document.getElementById('riskLevelTest').textContent =
-            `${resultTest.text} (${resultTest.range[0]}-${resultTest.range[1]})`;
+            `${resultTest.text}`;
     }
 
     // 初始化显示结果
