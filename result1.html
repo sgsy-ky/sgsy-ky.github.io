@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>评估结果</title>
+    <title>Assessment results</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -83,15 +83,16 @@
 </head>
 <body>
 <div class="container">
-    <h1>评估结果</h1>
+    <h1>Assessment results</h1>
 
     <div class="result-card">
         <div id="resultImage"></div>
         <div class="result-value" id="pValue"></div>
         <div class="result-description" id="riskLevel"></div>
         <div id="resultImageTest"></div>
+
+        <a href="index.html" class="back-btn">Reassessment</a>
         <div class="result-description" id="riskLevelTest"></div>
-        <a href="index.html" class="back-btn">重新评估</a>
     </div>
 </div>
 <script src="js/jquery.min.js"></script>
@@ -100,67 +101,90 @@
     const urlParams = new URLSearchParams(window.location.search);
     const p = parseFloat(urlParams.get('p'));
 
+    var lowRisk='Low - risk area (0 - 0.2):\n' +
+        'According to the model prediction, you are currently in the low - risk area for hip osteoporosis. It is recommended that you continue to maintain a healthy lifestyle, including moderate exercise (such as brisk walking, swimming, etc.), a balanced diet (foods rich in calcium and vitamin D), and adequate sun exposure (15 - 30 minutes per day) to maintain bone health';
+
+    var mediumRisk='Medium - risk area (0.2 - 0.4):\n' +
+        'According to the model prediction, you are currently in the medium - risk area for hip osteoporosis. It is recommended that you take the following measures:Bone density screening: Have a dual - photon bone density test as soon as possible to clarify the specific situation of osteoporosis.\n' +
+        'Targeted treatment: Under the guidance of a professional doctor, carry out targeted anti - osteoporosis treatment according to the screening results.\n' +
+        'Life guidance:\n' +
+        'Fall prevention: Pay attention to the safety of the home environment, remove debris on the ground, install anti - slip mats and handrails, especially in the bathroom and stairs.\n' +
+        'Moderate exercise: Engage in moderate weight - bearing exercises (such as walking, Tai Chi, etc.), and avoid strenuous exercise and high - risk activities.\n' +
+        'Diet adjustment: Increase the intake of foods rich in calcium and vitamin D, such as milk, bean products, fish, etc. Supplement calcium and vitamin D under the advice of a doctor.\n' +
+        'Smoking cessation and alcohol limitation: Avoid smoking and excessive drinking, as these habits will accelerate bone loss.\n' +
+        'Regular review: It is recommended to have a bone density review every 12 months to monitor bone changes.'
+    var highRisk='High - risk area (0.4 - 1.0):\n' +
+        'According to the model prediction, you are currently in the high - risk area for hip osteoporosis. It is recommended that you take the following measures:\n' +
+        'Standardized diagnosis and treatment: Go to a specialist doctor as soon as possible for standardized diagnosis and treatment, and carry out a comprehensive assessment of osteoporosis.\n' +
+        'Bone density test: Have a dual - photon bone density test to clarify the specific situation of osteoporosis.\n' +
+        'Targeted treatment: Under the guidance of a doctor, carry out standardized anti - osteoporosis treatment, including drug treatment, rehabilitation training, etc.\n' +
+        'Life guidance:\n' +
+        'Fall prevention: Pay high attention to fall prevention measures, ensure the safety of the living environment, and avoid walking on slippery or uneven ground. You can use walking aids or crutches to assist in walking.\n' +
+        'Moderate exercise: Engage in safe rehabilitation exercises under the guidance of a doctor, and avoid high - risk activities.\n' +
+        'Diet adjustment: Increase the intake of foods rich in calcium and vitamin D, such as milk, bean products, fish, etc. Supplement calcium and vitamin D under the advice of a doctor.\n' +
+        'Smoking cessation and alcohol limitation: Strictly quit smoking and avoid drinking, as these habits will further worsen osteoporosis.\n' +
+        'Regular review: It is recommended to have a bone density review every 6 months to monitor bone changes and adjust the treatment plan in a timely manner.\n' +
+        'Psychological support: Maintain a positive and optimistic attitude, avoid excessive anxiety, and seek psychological support if necessary.'
     // 结果配置 训练
     const resultConfig = [
         {
             range: [0, 0.1],
             image: 'img/xl/1.jpg', // 替换为实际图片路径
-            text: '低风险（Visualization of training set）',
-            colorClass: 'low-risk'
+            colorClass: 'low-risk',
+            text:'Low - risk'
         },
         {
             range: [0.1, 0.2],
-            image: 'img/xl/2.jpg', // 替换为实际图片路径
-            text: '低风险（Visualization of training set）',
-            colorClass: 'low-risk'
+            image: 'img/xl/2.jpg',
+            colorClass: 'low-risk',
+            text:'Low - risk'
         },
         {
             range: [0.2, 0.3],
             image: 'img/xl/3.jpg', // 替换为实际图片路径
-            text: '低风险（Visualization of training set）',
-            colorClass: 'low-risk'
+            colorClass: 'medium-risk',
+            text:'Medium - risk'
         },
         {
             range: [0.3, 0.4],
-            image: 'img/xl/4.jpg', // 替换为实际图片路径
-            text: '中风险（Visualization of training set）',
-            colorClass: 'medium-risk'
+            image: 'img/xl/4.jpg',
+            text:'Medium - risk'
         },
         {
             range: [0.4, 0.5],
             image: 'img/xl/5.jpg', // 替换为实际图片路径
-            text: '中风险（Visualization of training set）',
-            colorClass: 'medium-risk'
+            colorClass: 'high-risk',
+            text:'High - risk'
         },
         {
             range: [0.5, 0.6],
             image: 'img/xl/6.jpg', // 替换为实际图片路径
-            text: '中风险（Visualization of training set）',
-            colorClass: 'medium-risk'
+            colorClass: 'high-risk',
+            text:'High - risk'
         },
         {
             range: [0.6, 0.7],
             image: 'img/xl/7.jpg', // 替换为实际图片路径
-            text: '中风险（Visualization of training set）',
-            colorClass: 'medium-risk'
+            colorClass: 'high-risk',
+            text:'High - risk'
         },
         {
             range: [0.7, 0.8],
             image: 'img/xl/8.jpg', // 替换为实际图片路径
-            text: '高风险（Visualization of training set）',
-            colorClass: 'high-risk'
+            colorClass: 'high-risk',
+            text:'High - risk'
         },
         {
             range: [0.8, 0.9],
             image: 'img/xl/9.jpg', // 替换为实际图片路径
-            text: '高风险（Visualization of training set）',
-            colorClass: 'high-risk'
+            colorClass: 'high-risk',
+            text:'High - risk'
         },
         {
             range: [0.9, 10000],
             image: 'img/xl/10.jpg', // 替换为实际图片路径
-            text: '高风险（Visualization of training set）',
-            colorClass: 'high-risk'
+            colorClass: 'high-risk',
+            text:'High - risk'
         }
     ];
 
@@ -168,65 +192,55 @@
     const resultConfigTest = [
         {
             range: [0, 0.1],
-            text: '低风险（Visualization of Test Set）',
-            image: 'img/cs/1.jpg', // 替换为实际图片路径
-            colorClass: 'low-risk'
+            text: lowRisk,
+            image: 'img/cs/1.jpg'
         },
         {
             range: [0.1, 0.2],
-            text: '低风险（Visualization of Test Set）',
-            image: 'img/cs/2.jpg', // 替换为实际图片路径
-            colorClass: 'low-risk'
+            text: lowRisk,
+            image: 'img/cs/2.jpg'
 
         },
         {
             range: [0.2, 0.3],
-            text: '低风险（Visualization of Test Set）',
-            image: 'img/cs/3.jpg', // 替换为实际图片路径
-            colorClass: 'low-risk'
+            text: mediumRisk,
+            image: 'img/cs/3.jpg'
 
         },
         {
             range: [0.3, 0.4],
-            text: '中风险（Visualization of Test Set）',
-            image: 'img/cs/4.jpg', // 替换为实际图片路径
-            colorClass: 'medium-risk'
+            text: mediumRisk,
+            image: 'img/cs/4.jpg'
         },
         {
             range: [0.4, 0.5],
-            text: '中风险（Visualization of Test Set）',
-            image: 'img/cs/5.jpg', // 替换为实际图片路径
-            colorClass: 'medium-risk'
+            text: highRisk,
+            image: 'img/cs/5.jpg'
         },
         {
             range: [0.5, 0.6],
-            text: '中风险（Visualization of Test Set）',
-            image: 'img/xl/6.jpg', // 替换为实际图片路径
-            colorClass: 'medium-risk'
+            text: highRisk,
+            image: 'img/xl/6.jpg'
         },
         {
             range: [0.6, 0.7],
-            text: '中风险（Visualization of Test Set）',
-            image: 'img/xl/7.jpg', // 替换为实际图片路径
-            colorClass: 'medium-risk'
+            text: highRisk,
+            image: 'img/xl/7.jpg'
         },
         {
             range: [0.7, 0.8],
             image: 'img/xl/8.jpg', // 替换为实际图片路径
-            text: '高风险（Visualization of Test Set）',
-            colorClass: 'high-risk'
+            text: highRisk
         },
         {
             range: [0.8, 0.9],
             image: 'img/xl/9.jpg', // 替换为实际图片路径
-            text: '高风险（Visualization of Test Set）',
-            colorClass: 'high-risk'
+            text: highRisk
         },
         {
             range: [0.9, 10000],
             image: 'img/xl/10.jpg', // 替换为实际图片路径
-            text: '高风险（Visualization of Test Set）',
-            colorClass: 'high-risk'
+            text: highRisk
         }
     ];
 
@@ -261,9 +275,10 @@
         document.getElementById('resultImageTest').appendChild(imgElementTest);
 
         // 设置样式
+        pValueElement.textContent =pValueElement.textContent+'('+` ${result.text}`+')';
         pValueElement.className = `result-value ${result.colorClass}`;
-        document.getElementById('riskLevel').textContent =
-            `${result.text} `;
+/*        document.getElementById('riskLevel').textContent =
+            `${result.text} `;*/
         document.getElementById('riskLevelTest').textContent =
             `${resultTest.text}`;
     }
